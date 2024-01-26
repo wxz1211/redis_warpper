@@ -21,12 +21,12 @@ func (r *RedisWarp) GetStruct(key string, dest interface{}) error {
 		return redis.Nil
 	}
 
-	vals, err := r.HGetAll(context.Background(), key).Result()
+	values, err := r.HGetAll(context.Background(), key).Result()
 	if err != nil {
 		return err
 	}
 	dmap := map[string]interface{}{}
-	for k, v := range vals {
+	for k, v := range values {
 		dmap[k] = v
 	}
 	return scanMapToStruct(dest, dmap)

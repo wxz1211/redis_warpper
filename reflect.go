@@ -95,7 +95,7 @@ func getFieldName(ft reflect.StructField) (string, bool) {
 
 func getStructFieldName(data interface{}) []string {
 	srcType := indirectType(reflect.TypeOf(data))
-	ret := []string{}
+	var ret []string
 	for m := 0; m < srcType.NumField(); m++ {
 		field := srcType.Field(m)
 		fieldName, _ := getFieldName(field)
@@ -124,7 +124,7 @@ func structToMap(data interface{}) (map[string]interface{}, error) {
 	return ret, nil
 }
 
-func scanMapToStruct(dest interface{}, vals map[string]interface{}) error {
+func scanMapToStruct(dest interface{}, values map[string]interface{}) error {
 	srcValue := indirect(reflect.ValueOf(dest))
 	srcType := indirectType(reflect.TypeOf(dest))
 
@@ -135,7 +135,7 @@ func scanMapToStruct(dest interface{}, vals map[string]interface{}) error {
 		if jsonTypeName == "" {
 			continue
 		}
-		v, ok := vals[fieldName].(string)
+		v, ok := values[fieldName].(string)
 		if !ok {
 			continue
 		}

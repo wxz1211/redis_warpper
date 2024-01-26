@@ -72,7 +72,10 @@ func (l *bucket) lock(name string) error {
 
 func (l *bucket) unlock(name string) error {
 	lkey := l.getIndexKey(name) + "#WLOCK"
-	l.rds.Del(context.Background(), lkey).Result()
+	_, err := l.rds.Del(context.Background(), lkey).Result()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -136,16 +139,16 @@ func (l *bucket) Create(name string, bucketCount uint) error {
 }
 
 func (l *bucket) Size(name string) (int64, error) {
-	idata, err := l.Meta(name, true)
+	data, err := l.Meta(name, true)
 	if err != nil {
 		return 0, err
 	}
-	return int64(idata.Count), nil
+	return int64(data.Count), nil
 }
 
 func (l *bucket) Exists(name string) (bool, error) {
-	nkey := l.getIndexKey(name)
-	e, err := l.rds.Exists(context.Background(), nkey).Result()
+	key := l.getIndexKey(name)
+	e, err := l.rds.Exists(context.Background(), key).Result()
 	if err != nil {
 		return false, err
 	}
